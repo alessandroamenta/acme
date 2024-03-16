@@ -120,20 +120,16 @@ export type State = {
     }
   }
 
-  export async function authenticate(
+
+  export async function googleAuthenticate(
     prevState: string | undefined,
     formData: FormData,
   ) {
     try {
-      await signIn('credentials', formData);
+      await signIn('google');
     } catch (error) {
       if (error instanceof AuthError) {
-        switch (error.type) {
-          case 'CredentialsSignin':
-            return 'Invalid credentials.';
-          default:
-            return 'Something went wrong.';
-        }
+        return 'google log in failed'
       }
       throw error;
     }

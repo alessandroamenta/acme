@@ -2,6 +2,7 @@
 const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
+  
 export function CardSkeleton() {
   return (
     <div
@@ -212,6 +213,39 @@ export function InvoicesTableSkeleton() {
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  );
+}
+
+
+export function MeditationListSkeleton() {
+  return (
+    <div className={`${shimmer} relative w-full overflow-hidden rounded-xl bg-gray-100 p-4 shadow-md md:col-span-4`}>
+      <div className="mb-4 h-8 w-36 rounded-md bg-gray-300" />
+      <div className="space-y-4">
+        <div className="h-10 w-full rounded-md bg-gray-300" />
+        <div className="h-10 w-full rounded-md bg-gray-300" />
+        <div className="h-10 w-full rounded-md bg-gray-300" />
+        {/* Repeat or loop as many times as you'd like for the skeleton placeholder items */}
+      </div>
+    </div>
+  );
+}
+
+
+export function MeditationSettingsSkeleton() {
+  return (
+    <div className={`${shimmer} relative w-full overflow-hidden rounded-xl bg-gray-100 p-4 shadow-md`}>
+      <div className="mb-4 h-8 w-36 rounded-md bg-gray-300" /> {/* Title placeholder */}
+      <div className="space-y-4">
+        {/* Each div below represents a placeholder for form fields */}
+        <div className="h-10 w-full rounded-md bg-gray-300" /> {/* AI Provider placeholder */}
+        <div className="h-10 w-full rounded-md bg-gray-300" /> {/* Duration placeholder */}
+        <div className="h-10 w-full rounded-md bg-gray-300" /> {/* Guidance Level placeholder */}
+        <div className="h-10 w-full rounded-md bg-gray-300" /> {/* TTS Provider placeholder */}
+        <div className="h-10 w-full rounded-md bg-gray-300" /> {/* Voice selection placeholder */}
+        <div className="h-10 w-full rounded-md bg-gray-300" /> {/* Submit button placeholder */}
       </div>
     </div>
   );

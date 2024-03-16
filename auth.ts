@@ -1,45 +1,46 @@
 import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
-import { z } from 'zod';
-import { sql } from '@vercel/postgres';
-import type { User } from '@/app/lib/definitions';
-import bcrypt from 'bcrypt';
- 
-async function getUser(email: string): Promise<User | undefined> {
-  try {
-    const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-    return user.rows[0];
-  } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
-  }
-}
- 
-export const { auth, signIn, signOut } = NextAuth({
+import Credentials from 'next-auth/providers/credentials';
+import { User } from '@/app/lib/definitions';
+import google from 'next-auth/providers/google'; // added import
+
+export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
+    // **************************************************************
+    // added provider
+    google({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    }),
+    // **************************************************************
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials);
- 
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-            if (passwordsMatch) {
-                return user;
+        if (credentials.id && credentials.password) {
+          // Add you backend code here
+          // let loginRes = await backendLogin(credentials.id, credentials.password)
+          let loginRes = {
+            success : true,
+            data : {
+              user: {
+                ID: "john_doe",
+                NAME: "John Doe",
+                EMAIL: "email@email.email",
+              },
             }
-        
-        console.log('Invalid credentials')
-        return null;
+          }
+          // Failed logging in
+          if (!loginRes.success) return null;
+          // Successful log in
+          const user = {
+            id: loginRes.data.user.ID ?? '',
+            name: loginRes.data.user.NAME ?? '',
+            email: loginRes.data.user.EMAIL ?? '',
+          } as User;
+          return user;
         }
- 
         return null;
       },
-    }),
+    })
   ],
 });
